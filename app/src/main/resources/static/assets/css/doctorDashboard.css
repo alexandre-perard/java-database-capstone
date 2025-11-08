@@ -1,65 +1,121 @@
-/* This is the style sheet for the doctorDashboard.html */
-/* 
-**Table Header (`.table-header`)**
+/* doctorDashboard.css
+   Styles for the doctor dashboard table, controls and actions.
+*/
 
-* Set font size to `24px` for clear emphasis.
-* Use a dark teal color (`#015c5d`) for consistency with the theme.
-* Add `30px` bottom margin and remove right margin.
+:root{
+  --teal: #015c5d;
+  --dark-teal: #003e3e;
+  --muted: #666666;
+  --accent: #A62B1F;
+}
 
-**Table Styling (`table`)**
+/* Table header/title */
+.table-header {
+  font-size: 24px;
+  color: var(--teal);
+  margin-bottom: 30px;
+  margin-right: 0;
+  font-weight: 700;
+}
 
-* Make the table full width (`100%`).
-* Collapse borders for clean lines.
-* Use a `sans-serif` font.
-* Add `20px` top margin for spacing.
+/* Table base styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  margin-top: 20px;
+}
 
-**Table Head (`thead`)**
+thead {
+  background: rgba(51,51,51,0.06); /* #33333310 equivalent */
+  color: #fff; /* keep header text readable when using colored backgrounds */
+}
 
-* Set a very light dark background (`#33333310`) for header row.
-* Use white text color (`#fff`).
+th, td {
+  padding: 12px 16px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
 
-**Table Cells (`td, th`)**
+/* Alternate row colors */
+tbody tr:nth-child(even) {
+  background: rgba(249,249,249,0.35); /* #f9f9f959-ish */
+}
 
-* Apply padding of `12px 16px` for spacing.
-* Center-align the text.
-* Add a subtle bottom border (`1px solid #ddd`).
+tbody tr:nth-child(odd) {
+  background: rgba(255,255,255,0.75); /* soft white */
+}
 
-**Table Row Styling**
+tbody tr:hover {
+  background: rgba(1,92,93,0.22); /* light teal overlay */
+}
 
-* Alternate row colors for better readability:
+/* Prescription action button */
+.prescription-btn {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--teal);
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  transition: transform 140ms ease, filter 140ms ease;
+}
 
-  * Even rows: semi-transparent light grey (`#f9f9f959`).
-  * Odd rows: soft white background (`#ffffffc0`).
-* On hover: highlight row with a light teal overlay (`#015c5d39`).
+.prescription-btn:hover {
+  transform: scale(1.1);
+  filter: brightness(1.08);
+}
 
-**Prescription Button (`.prescription-btn`)**
+.prescription-btn:active {
+  transform: scale(0.95);
+}
 
-* Set size to `30px x 30px`.
-* Make it interactive with a pointer cursor.
-* Add transition effects for scale and brightness on hover.
-* On hover:
+/* No records message */
+.noPatientRecord {
+  font-size: 16px;
+  color: var(--muted);
+  font-style: italic;
+  padding: 18px 0;
+}
 
-  * Slightly enlarge (`scale(1.1)`)
-  * Brighten appearance
-* On click: slightly shrink (`scale(0.95)`).
+/* Today button styling */
+.today-btn {
+  margin-right: 10px;
+  padding: 10px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-**No Record Message (`.noPatientRecord`)**
+.today-btn:hover { opacity: 0.95; }
 
-* Use a `16px` italic grey font to indicate no data gently.
+/* Date picker */
+.date-picker,
+input[type="date"] {
+  margin-left: 10px;
+  margin-top: 13px;
+  border-radius: 8px;
+  padding: 10px;
+  height: 30px;
+  border: 1px solid #ddd;
+}
 
-**Today Button (`.today-btn`)**
+/* Small utilities */
+.table-container { overflow-x: auto; }
 
-* Add right margin (`10px`).
-* Add padding (`10px`).
-* Set background color to teal green (`#015c5d`).
+.muted { color: var(--muted); }
 
-**Date Picker (`.date-picker`)**
+/* responsive tweaks */
+@media (max-width: 700px) {
+  th, td { padding: 10px 8px; font-size: 14px; }
+  .table-header { font-size: 20px; }
+}
 
-* Add left margin (`10px`) and top margin (`13px`).
-* Round corners with `8px` radius.
-* Add padding (`10px`) and set fixed height (`30px`).
-
----
-
-Let me know if you'd like a consolidated style guide for the entire HospitalCRM frontend.
- */
+/* end of doctorDashboard.css */

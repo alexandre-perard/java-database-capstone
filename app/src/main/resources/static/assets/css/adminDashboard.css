@@ -1,94 +1,157 @@
-/*this is the style sheet for the adminDashboard. */
+/* Admin Dashboard stylesheet */
 
-/* 
-Global Reset (`*`)
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-* Purpose: Ensure consistent layout across all browsers.
-* Properties:
+/* Base */
+html,
+body {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f6f8f9;
+  color: #222;
+}
 
-  * `margin: 0` — removes default outer spacing from all elements.
-  * `padding: 0` — removes default inner spacing.
-  * `box-sizing: border-box` — ensures padding and borders are included within the total width/height of elements.
+/* Wrapper layout */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-Base HTML & Body (`html, body`)
+/* Headings */
+h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 50px;
+  color: #003e3e;
+}
 
-* Purpose: Establish a full-height layout and apply a standard font across the page.
-* Properties:
+/* Main dashboard content */
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* try a background image if present; fall back to a subtle gradient */
+  background-image: linear-gradient(180deg, #ffffff 0%, #f3fbfb 100%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
-  * `height: 100%` — allows containers to stretch to the full viewport height.
-  * `font-family: Arial, sans-serif` — applies a clean, readable sans-serif font.
+/* If you want a background image, place it in ../images/admin-bg.png and uncomment below */
+/* .main-content { background-image: url('../images/admin-bg.png'); } */
 
-Main Layout Wrapper (`.wrapper`)
+/* Search & filters */
+.filter-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 18px 0 24px 0;
+}
 
-* Purpose: Create a flexible, vertical layout that fills the entire screen.
-* Properties:
+.searchBar {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  width: 320px;
+  font-size: 14px;
+}
 
-  * `display: flex` — enables flexbox for layout control.
-  * `flex-direction: column` — stacks children vertically.
-  * `min-height: 100vh` — ensures the wrapper always covers full screen height.
+.filter-select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
 
-Section Heading (`h2`)
+/* Content area where doctor cards are injected */
+#content {
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
 
-* Purpose: Style the headings prominently for section separation.
-* Properties:
+/* Buttons */
+button {
+  background-color: #A62B1F;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  width: 200px;
+  cursor: pointer;
+  font-size: 16px;
+}
 
-  * `font-size: 32px` — makes the heading large and noticeable.
-  * `font-weight: bold` — emphasizes text.
-  * `margin-bottom: 50px` — creates space below the heading.
-  * `color: #003e3e` — uses a strong teal for visual anchoring.
+button:hover,
+button:focus {
+  /* per spec: retain same red background on hover */
+  background-color: #A62B1F;
+  outline: none;
+}
 
-Main Content Section (`.main-content`)
+/* Admin-specific smaller button */
+.adminBtn {
+  background-color: #f4f4f4;
+  color: #333;
+  font-weight: 700;
+  width: 110px;
+  padding: 10px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-* Purpose: Layout the main content with padding and a background image.
-* Properties:
+.adminBtn:hover,
+.adminBtn:focus {
+  color: #A62B1F;
+}
 
-  * `flex-grow: 1` — lets the content fill the available vertical space.
-  * `padding: 40px` — adds internal spacing around content.
-  * `display: flex` and `flex-direction: column` — organizes content in a vertical stack.
-  * `text-align: center` — centers the text.
-  * `background-image: url("index.png")` — sets a full-screen dashboard background.
-  * `background-size: cover` — ensures the image covers the whole section.
-  * `background-position: center` — centers the image.
-  * `background-repeat: no-repeat` — avoids tiling the image.
-  * `background-attachment: fixed` — fixes the image while scrolling.
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .filter-wrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
 
-Primary Button (`button`)
+  .searchBar {
+    width: 100%;
+    max-width: 420px;
+  }
 
-* Purpose: Design prominent, interactive buttons for main actions.
+  button {
+    width: 100%;
+    max-width: 320px;
+  }
+}
 
-* Properties:
+/* Simple card style for doctor (used by JS-created cards) */
+.doctor-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-  * `background-color: #A62B1F` — sets a bold red color.
-  * `color: white` — makes text stand out.
-  * `border: none` — removes any outline/border.
-  * `border-radius: 12px` — creates rounded corners.
-  * `padding: 10px 20px` — gives space inside the button.
-  * `margin-top: 20px` — adds spacing above the button.
-  * `width: 200px` — ensures consistent button width.
-  * `cursor: pointer` — shows a hand icon on hover.
-  * `font-size: 16px` — makes the text readable.
+/* small utility */
+.muted {
+  color: #666;
+  font-size: 14px;
+}
 
-* On Hover:
-
-  * Retains the same red background to maintain branding.
-
-Admin Button (`.adminBtn`)
-
-* Purpose: Provide a secondary button style for admin-specific actions.
-
-* Properties:
-
-  * `background-color: #f4f4f4` — uses a light grey background.
-  * `color: #333` — uses dark text for contrast.
-  * `font-weight: bold` — emphasizes text.
-  * `width: 110px` — smaller, compact width.
-  * `padding: 10px 0` — vertical padding only.
-  * `border: none` — clean look.
-  * `cursor: pointer` — indicates it's clickable.
-
-* On Hover**:
-
-   Changes text color to `#A62B1F` for brand consistency while keeping the background same.
-
-
-*/
+/* end of adminDashboard.css */

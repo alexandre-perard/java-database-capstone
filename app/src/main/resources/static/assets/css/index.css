@@ -1,53 +1,161 @@
 /* this is the style sheet file for index.htlm  */
 
-/* 
-**Global Reset (`*`)**
+/* Global reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-* Remove all default margin and padding.
-* Use `border-box` for sizing to include padding and border in element size.
+/* Base */
+html,
+body {
+  height: 100%;
+  font-family: 'Roboto', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f7f9fa; /* subtle fallback */
+  color: #062a2a;
+}
 
-**Base (`html, body`)**
+/* Container / wrapper layout */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
 
-* Set height to 100% for full viewport layout.
-* Use the `'Roboto'` sans-serif font for modern, clean typography.
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-**Layout Wrapper (`.wrapper`)**
+/* Heading */
+h2,
+h1 {
+  font-size: 48px;
+  margin-bottom: 50px;
+  color: #003e3e;
+  font-weight: 700;
+  font-family: 'Alegreya', 'Roboto', sans-serif;
+}
 
-* Use a vertical flexbox layout.
-* Ensure the wrapper covers at least the full height of the screen (`min-height: 100vh`).
+/* Main area */
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  /* Background: prefer an image if provided, otherwise a subtle gradient */
+  background-image: linear-gradient(135deg, #f0fbfb 0%, #e6f7f7 100%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 
-**Heading (`h2`)**
+.role-selection .role-buttons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
 
-* Set a large font size (`48px`) for prominence.
-* Add a bottom margin of `50px` for spacing.
-* Use a dark teal color (`#003e3e`).
-* Make the font bold and use a blended font stack (`'Alegreya', 'Roboto', sans-serif`) for elegant styling.
+/* Buttons */
+button {
+  background: #015c5d;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  width: 200px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 160ms ease-in-out, transform 120ms ease;
+}
 
-**Main Section (`.main-content`)**
+button:hover,
+button:focus {
+  background: #A62B1F; /* hover color per spec */
+  outline: none;
+  transform: translateY(-2px);
+}
 
-* Allow the section to grow to fill space with `flex-grow: 1`.
-* Add `40px` of internal padding.
-* Center content both horizontally and vertically using `justify-content` and `align-items`.
-* Display items in a column direction.
-* Center all text.
-* Apply a full-screen background image with:
+/* Dashboard button variant */
+.dashboard-btn {
+  background: #015c5d;
+  color: #fff;
+}
 
-  * `cover` size
-  * `center` positioning
-  * no repeat
-  * `fixed` attachment to keep image still during scroll
+.dashboard-btn:hover,
+.dashboard-btn:focus {
+  background: #003e3e; /* deeper teal on hover */
+}
 
-**Buttons (`button`)**
+/* Small responsive tweaks */
+@media (max-width: 600px) {
+  h1,
+  h2 {
+    font-size: 32px;
+    margin-bottom: 24px;
+  }
 
-* Style with a teal green background (`#015c5d`) and white text.
-* Remove borders and round the corners (`12px`).
-* Use `10px 20px` padding and set width to `200px`.
-* Add a top margin of `10px` for spacing.
-* Enable pointer cursor and readable font size (`16px`).
-* On hover, change background color to bold red (`#A62B1F`).
+  button {
+    width: 100%;
+    max-width: 280px;
+  }
+}
 
-**Dashboard Buttons (`.dashboard-btn`)**
+/* Modal basic styling (used by the site-wide modal structure) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
 
-* Use the same base green background (`#015c5d`) as the default button.
-* On hover, darken the background to deep teal (`#003e3e`) for visual feedback.
- */
+.modal-content {
+  background-color: #fff;
+  margin: 8% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.modal .close {
+  float: right;
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Utility input styles for forms inside modals */
+.input-field {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: 1px solid #d6d6d6;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* small helper classes */
+.select-dropdown {
+  appearance: none;
+}
+
+/* end of index.css */
