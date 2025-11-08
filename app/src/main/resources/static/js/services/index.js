@@ -56,3 +56,102 @@
     - Log the error to the console
     - Show a generic error message
 */
+
+import { openModal } from '../components/modals.js';
+import { API_BASE_URL } from '../config/config.js';
+
+const ADMIN_API = API_BASE_URL + '/admin';
+const DOCTOR_API = API_BASE_URL + '/doctor';
+
+// Ensure DOM elements are available after page load and wire quick modal openers if present
+window.addEventListener('load', () => {
+  const adminTrigger = document.getElementById('adminLogin');
+  const doctorTrigger = document.getElementById('doctorLogin');
+
+  if (adminTrigger) {
+    adminTrigger.addEventListener('click', () => openModal('adminLogin'));
+  }
+
+  if (doctorTrigger) {
+    doctorTrigger.addEventListener('click', () => openModal('doctorLogin'));
+  }
+});
+
+// Admin login handler called by the modal button
+window.adminLoginHandler = async function () {
+  try {
+    const usernameEl = document.getElementById('username');
+    const passwordEl = document.getElementById('password');
+    const username = usernameEl ? usernameEl.value.trim() : '';
+    const password = passwordEl ? passwordEl.value : '';
+
+    if (!username || !password) {
+      alert('Please enter username and password');
+      return;
+    }
+
+    const admin = { username, password };
+
+    const resp = await fetch(`${ADMIN_API}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(admin)
+    });
+
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data && data.token) {
+        localStorage.setItem('token', data.token);
+        if (typeof selectRole === 'function') selectRole('admin');
+      } else {
+        alert('Login succeeded but token missing in response.');
+      }
+    } else {
+      const err = await resp.json().catch(() => ({}));
+      alert(err.message || 'Invalid admin credentials');
+    }
+  } catch (error) {
+    console.error('adminLoginHandler error:', error);
+    alert('An error occurred while logging in. Please try again later.');
+  }
+};
+
+// Doctor login handler called by the modal button
+window.doctorLoginHandler = async function () {
+  try {
+    const emailEl = document.getElementById('email');
+    const passwordEl = document.getElementById('password');
+    const email = emailEl ? emailEl.value.trim() : '';
+    const password = passwordEl ? passwordEl.value : '';
+
+    if (!email || !password) {
+      alert('Please enter email and password');
+      return;
+    }
+
+    const doctor = { email, password };
+
+    const resp = await fetch(`${DOCTOR_API}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(doctor)
+    });
+
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data && data.token) {
+        localStorage.setItem('token', data.token);
+        if (typeof selectRole === 'function') selectRole('doctor');
+      } else {
+        alert('Login succeeded but token missing in response.');
+      }
+    } else {
+      const err = await resp.json().catch(() => ({}));
+      alert(err.message || 'Invalid doctor credentials');
+    }
+  } catch (error) {
+    console.error('doctorLoginHandler error:', error);
+    alert('An error occurred while logging in. Please try again later.');
+  }
+};
+

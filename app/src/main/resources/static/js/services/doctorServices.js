@@ -51,3 +51,74 @@
 
    Catch any other errors, alert the user, and return a default empty result
 */
+
+import { API_BASE_URL } from '../config/config.js';
+
+const DOCTOR_API = API_BASE_URL + '/doctor';
+
+export async function getDoctors() {
+  try {
+    const resp = await fetch(`${DOCTOR_API}`);
+    if (!resp.ok) {
+      console.error('Failed to fetch doctors:', resp.statusText);
+      return [];
+    }
+    const data = await resp.json();
+    // Backend may return { doctors: [...] } or an array directly. Handle both.
+    if (Array.isArray(data)) return data;
+    return data.doctors || [];
+  } catch (error) {
+    console.error('Error in getDoctors:', error);
+    return [];
+  }
+}
+
+export async function deleteDoctor(id, token) {
+  try {
+    const resp = await fetch(`${DOCTOR_API}/${id}/${token}`, {
+      method: 'DELETE'
+    });
+    const data = await resp.json().catch(() => ({}));
+    return { success: resp.ok, message: data.message || (resp.ok ? 'Deleted' : 'Failed to delete') };
+  } catch (error) {
+    console.error('Error in deleteDoctor:', error);
+    return { success: false, message: 'Network error' };
+  }
+}
+
+export async function saveDoctor(doctor, token) {
+  try {
+    const resp = await fetch(`${DOCTOR_API}/${token}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(doctor)
+    });
+    const data = await resp.json().catch(() => ({}));
+    return { success: resp.ok, message: data.message || (resp.ok ? 'Saved' : 'Failed to save') };
+  } catch (error) {
+    console.error('Error in saveDoctor:', error);
+    return { success: false, message: 'Network error' };
+  }
+}
+
+export async function filterDoctors(name, time, speciality) {
+  try {
+    const nameParam = name ? encodeURIComponent(name) : 'null';
+    const timeParam = time ? encodeURIComponent(time) : 'null';
+    const specParam = speciality ? encodeURIComponent(speciality) : 'null';
+
+    const resp = await fetch(`${DOCTOR_API}/filter/${nameParam}/${timeParam}/${specParam}`);
+    if (resp.ok) {
+      const data = await resp.json();
+      return data;
+    } else {
+      console.error('Failed to filter doctors:', resp.statusText);
+      return { doctors: [] };
+    }
+  } catch (error) {
+    console.error('Error in filterDoctors:', error);
+    alert('Something went wrong while filtering doctors');
+    return { doctors: [] };
+  }
+}
+
