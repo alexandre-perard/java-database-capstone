@@ -1,7 +1,122 @@
 package com.project.back_end.services;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.project.back_end.DTO.AppointmentDTO;
+import com.project.back_end.models.Admin;
+import com.project.back_end.models.Doctor;
+import com.project.back_end.models.Patient;
+import com.project.back_end.repo.AdminRepository;
+import com.project.back_end.repo.DoctorRepository;
+import com.project.back_end.repo.PatientRepository;
+import com.project.back_end.services.AppointmentService;
+import com.project.back_end.services.PatientService;
+
+@org.springframework.stereotype.Service
 public class Service {
-// 1. **@Service Annotation**
+	private final TokenService tokenService;
+	private final AdminRepository adminRepository;
+	private final DoctorRepository doctorRepository;
+	private final PatientRepository patientRepository;
+	private final AppointmentService appointmentService;
+	private final PatientService patientService;
+
+	@Autowired
+	public Service(TokenService tokenService, AdminRepository adminRepository, DoctorRepository doctorRepository,
+			PatientRepository patientRepository, AppointmentService appointmentService, PatientService patientService) {
+		this.tokenService = tokenService;
+		this.adminRepository = adminRepository;
+		this.doctorRepository = doctorRepository;
+		this.patientRepository = patientRepository;
+		this.appointmentService = appointmentService;
+		this.patientService = patientService;
+	}
+
+	public boolean validateToken(String token, String role) {
+		return tokenService.validateToken(token, role);
+	}
+
+	public Admin validateAdminLogin(String username, String password) {
+		Admin admin = adminRepository.findByUsername(username);
+		if (admin == null) return null;
+		if (admin.getPassword() != null && admin.getPassword().equals(password)) return admin;
+		return null;
+	}
+
+	public boolean validatePatient(String email, String phone) {
+		Patient byEmail = patientRepository.findByEmail(email);
+		if (byEmail != null) return false;
+		Patient byPhone = null;
+		try {
+			byPhone = patientRepository.findByEmailOrPhone(email, phone);
+		} catch (Exception e) {
+			// ignore
+		}
+		return byPhone == null;
+	}
+
+	public Patient validatePatientLogin(String email, String password) {
+		Patient p = patientRepository.findByEmail(email);
+		if (p == null) return null;
+		if (p.getPassword() != null && p.getPassword().equals(password)) return p;
+		return null;
+	}
+
+	public List<Doctor> filterDoctor(String name, String time, String specialty) {
+		// Very simple filter: delegate to repository methods where possible
+		if ((name == null || name.equals("null")) && (specialty == null || specialty.equals("null"))) {
+			return doctorRepository.findAll();
+		}
+		if (name != null && specialty != null) {
+			return doctorRepository.findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase(name, specialty);
+		}
+		if (name != null) {
+			return doctorRepository.findByNameLike("%" + name + "%");
+		}
+		if (specialty != null) {
+			return doctorRepository.findBySpecialtyIgnoreCase(specialty);
+		}
+		return Collections.emptyList();
+	}
+    
+	/**
+	 * Validate an appointment slot for a doctor at a given time.
+	 * Delegates to AppointmentService.validateAppointment which returns:
+	 *  -1 if doctor not found, 0 if slot taken, 1 if valid
+	 */
+	public int validateAppointment(Long doctorId, LocalDateTime appointmentTime) {
+		return appointmentService.validateAppointment(doctorId, appointmentTime);
+	}
+
+	/**
+	 * Filter patient appointments using the token to identify the patient.
+	 * Delegates to PatientService for actual filtering logic.
+	 */
+	public List<AppointmentDTO> filterPatient(String token, String condition, String doctorName) {
+		if (token == null) return new ArrayList<>();
+		String email = tokenService.extractEmail(token);
+		if (email == null) return new ArrayList<>();
+		Patient p = patientRepository.findByEmail(email);
+		if (p == null) return new ArrayList<>();
+		Long patientId = p.getId();
+		boolean hasCondition = condition != null && !condition.equals("null");
+		boolean hasDoctor = doctorName != null && !doctorName.equals("null");
+		if (hasCondition && hasDoctor) {
+			return patientService.filterByDoctorAndCondition(patientId, doctorName, condition);
+		}
+		if (hasCondition) {
+			return patientService.filterByCondition(patientId, condition);
+		}
+		if (hasDoctor) {
+			return patientService.filterByDoctor(patientId, doctorName);
+		}
+		return patientService.getPatientAppointments(patientId);
+	}
 // The @Service annotation marks this class as a service component in Spring. This allows Spring to automatically detect it through component scanning
 // and manage its lifecycle, enabling it to be injected into controllers or other services using @Autowired or constructor injection.
 

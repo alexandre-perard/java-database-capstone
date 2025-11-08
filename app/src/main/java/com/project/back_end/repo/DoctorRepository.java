@@ -1,6 +1,14 @@
 package com.project.back_end.repo;
 
-public interface DoctorRepository {
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.project.back_end.models.Doctor;
+
+@Repository
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
    // 1. Extend JpaRepository:
 //    - The repository extends JpaRepository<Doctor, Long>, which gives it basic CRUD functionality.
 //    - This allows the repository to perform operations like save, delete, update, and find without needing to implement these methods manually.
@@ -35,5 +43,25 @@ public interface DoctorRepository {
 // 3. @Repository annotation:
 //    - The @Repository annotation marks this interface as a Spring Data JPA repository.
 //    - Spring Data JPA automatically implements this repository, providing the necessary CRUD functionality and custom queries defined in the interface.
+
+   /**
+    * Find a doctor by email.
+    */
+   Doctor findByEmail(String email);
+
+   /**
+    * Find doctors whose name contains the provided string (SQL LIKE pattern).
+    */
+   List<Doctor> findByNameLike(String namePattern);
+
+   /**
+    * Case-insensitive search for name containing text and specialty equals (case-insensitive).
+    */
+   List<Doctor> findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase(String name, String specialty);
+
+   /**
+    * Find doctors by specialty ignoring case.
+    */
+   List<Doctor> findBySpecialtyIgnoreCase(String specialty);
 
 }
