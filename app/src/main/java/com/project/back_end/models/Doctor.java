@@ -45,7 +45,7 @@ public class Doctor {
 	@Pattern(regexp = "^[0-9]{10}$")
 	private String phone;
 
-	@ElementCollection(fetch = FetchType.LAZY)
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> availableTimes = new ArrayList<>();
 
 	public Doctor() {
